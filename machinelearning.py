@@ -33,13 +33,14 @@ def train(weightsBiases):
             number = data.trainX[i]
             number = np.array(number,ndmin=2)
             currentValue = number
-            layerOutput = np.array([])
+            layerOutput = []
             for j in range(len(weightsBiases)):
                 currentValue = currentValue.dot(weightsBiases[j][0]) + weightsBiases[j][1]
                 #print(currentValue)
                 currentValue = expit(currentValue)
                 #print(currentValue)
-                layerOutput.np.append(currentValue)
+                layerOutput.append(currentValue)
+                # layerOutput.append(np.array([currentValue]).transpose())
             #print(currentValue)
             index = np.argmax(currentValue)
             #print(index)
@@ -50,6 +51,7 @@ def train(weightsBiases):
             #print(outputCost)
             for j in range(len(weightsBiases)):
                 layer = len(weightsBiases) - j - 1
+                print(layerOutput)
                 derivative = outputCost * layerOutput[layer]*(1- layerOutput[layer])
                 weightDerivative = derivative * learningRate
                 biasDerivative = derivative * biasLearningRate
