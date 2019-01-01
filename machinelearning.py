@@ -40,7 +40,7 @@ def train(weightsBiases):
                 currentValue = expit(currentValue)
                 #print(currentValue)
                 layerOutput.append(currentValue)
-                # layerOutput.append(np.array([currentValue]).transpose())
+                #layerOutput.append(np.array([currentValue]).transpose())
             #print(currentValue)
             index = np.argmax(currentValue)
             #print(index)
