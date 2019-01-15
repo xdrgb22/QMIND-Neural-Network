@@ -9,7 +9,7 @@ import mnistdb.io as mio
 from scipy.special import expit
 
 #Here I decide the function's learning rate and the layers to be used by the network
-learningRate = 0.02
+learningRate = 0.05
 layers = [784,16,16,10]
 
 #Here is the sigmoid activation function not currently being used by the network
@@ -64,21 +64,25 @@ def train(weightsBiases):
                 totalCorrect = totalCorrect + 1
 
             #Here I calculate the output cost (the error) of the network
-            outputCost = (currentValue-correctNumbersIndex.trainY[i])**2
-
+            outputCost = (correctNumbersIndex.trainY[i]-currentValue)
             #In this loop I take the derivative of the network and adjust the weights and biases based on that derivative
             for j in range(len(weightsBiases)):
                 layer = len(weightsBiases) - j - 1
-                derivative = (learningRate * outputCost * (layerOutput[layer] * (1 - layerOutput[layer]))).transpose()
-                weightDerivative = derivative.dot(layerOutput[layer-1]).transpose()
-                weightsBiases[layer-1][0] = weightsBiases[layer-1][0] + weightDerivative
-                weightsBiases[layer-1][1] = weightsBiases[layer-1][1] + (derivative)
-                outputCost = weightsBiases[layer-1][0].transpose().dot(outputCost)
+                derivative = (learningRate * outputCost * (layerOutput[layer] * (1 - layerOutput[layer])))
+                if (layer > 0):
+                    weightDerivative = layerOutput[layer-1].transpose().dot(derivative)
+                else:
+                    inputData = number.reshape(1, 784)
+                    weightDerivative = inputData.transpose().dot(derivative)
+                weightsBiases[layer][0] = weightsBiases[layer][0] + weightDerivative
+                weightsBiases[layer][1] = weightsBiases[layer][1] + (derivative)
+                outputCost = weightsBiases[layer][0].dot(outputCost.transpose())
+                outputCost = outputCost.transpose()
             
             #Here I increment the tries of the network and print out the results of the current epoch and of all of the epochs later
             tries = tries + 1
             totalTries = totalTries + 1
-            print(correct/tries)
+        print(correct/tries)
         print(totalCorrect/totalTries)
 
 #Here is the main function, where the function calls are located
